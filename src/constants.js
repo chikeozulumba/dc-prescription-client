@@ -1,4 +1,8 @@
-const BASE_URL = 'http://localhost:2030';
+let BASE_URL = 'http://localhost:2030';
+
+if (process.env.NODE_ENV === 'production') {
+  BASE_URL = 'https://dc-prescription.herokuapp.com';
+}
 
 export default {
   BASE_URL,

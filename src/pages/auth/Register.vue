@@ -81,7 +81,7 @@ export default {
           this.$router.push('/');
         })
         .catch((error) => {
-          this.$toast.error(error.response.data?.error[0] || error.response.data?.message || 'Unsuccessful attempt', {
+          this.$toast.error((error.response?.data?.error ? error.response?.data?.error[0] : error.response?.data?.message) || 'Unsuccessful attempt', {
             position: 'top-right',
             duration: 3000,
           });
