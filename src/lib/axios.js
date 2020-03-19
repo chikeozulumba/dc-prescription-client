@@ -20,7 +20,7 @@ http.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 || error.response?.statusCode === 401) {
       localStorage.removeItem('authorization_token');
-      window.location.href = '/';
+      // window.location.href = '/';
     }
     return Promise.reject(error);
   },

@@ -95,7 +95,7 @@ export default new Vuex.Store({
             const { user } = resp.data;
             localStorage.setItem('authorization_token', accessToken);
             HTTP.defaults.headers.common.Authorization = accessToken;
-            commit('AUTH_SUCCESS', accessToken, user);
+            commit('AUTH_SUCCESS', { token: accessToken, user });
             resolve(resp);
           })
           .catch((err) => {
@@ -117,10 +117,15 @@ export default new Vuex.Store({
     },
     getPrescriptions({
       commit,
+      getters,
     }) {
       return new Promise((resolve, reject) => {
         commit('DATA_REQUEST', 'prescriptions');
-        HTTP.get(constants.GET_PRESCRIPTION_URL)
+        HTTP.get(constants.GET_PRESCRIPTION_URL, {
+          headers: {
+            Authorization: `Bearer ${getters.token}`,
+          },
+        })
           .then((resp) => {
             commit('GET_PRESCRIPTIONS', resp.data);
             resolve(resp);
