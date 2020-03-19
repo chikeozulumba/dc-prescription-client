@@ -2,7 +2,7 @@
   <div class="absolute w-full mt-20">
     <div class="w-full max-w-xs m-auto">
       <div class="flex items-center flex-shrink-0 text-white mb-6 m-auto justify-center">
-        <img class="w-10 mr-2 " src="../../assets/logo.png" alt="">
+        <!-- <img class="w-10 mr-2 " src="../../assets/logo.png" alt=""> -->
         <!-- <span class="font-semibold text-xl tracking-tight">Tailwind CSS</span> -->
       </div>
       <form @submit.prevent="registerUser" class="bg-white border border-gray-400 rounded px-8 pt-6 pb-8 mb-4">
@@ -72,7 +72,20 @@ export default {
       this.formFields[field] = evt.target.value;
     },
     async registerUser() {
-      this.$store.dispatch('register', this.formFields);
+      this.$store.dispatch('register', this.formFields)
+        .then(() => {
+          this.$toast.success('Success!', {
+            position: 'top-right',
+            duration: 3000,
+          });
+          this.$router.push('/');
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data?.error[0] || error.response.data?.message || 'Unsuccessful attempt', {
+            position: 'top-right',
+            duration: 3000,
+          });
+        });
     },
     switchToLogin() {
       this.$eventBus.$emit('auth-mode', 'login');

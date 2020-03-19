@@ -2,7 +2,7 @@
   <div class="absolute w-full mt-20">
     <div class="w-full max-w-xs m-auto">
       <div class="flex items-center flex-shrink-0 text-white mb-6 m-auto justify-center">
-        <img class="w-10 mr-2 " src="../../assets/logo.png" alt="">
+        <!-- <img class="w-10 mr-2 " src="../../assets/logo.png" alt=""> -->
         <!-- <span class="font-semibold text-xl tracking-tight">Tailwind CSS</span> -->
       </div>
       <form @submit.prevent="loginUser" class="bg-white border border-gray-400 rounded px-8 pt-6 pb-8 mb-4">
@@ -21,7 +21,7 @@
           <label class="block text-orange-600 font-sans text-sm font-bold mb-2" for="password">Password</label>
           <input
             @change.prevent="(evt) => onInputChange(evt, 'password')"
-            class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-orange-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
             placeholder="******************"
@@ -72,7 +72,7 @@ export default {
           this.$router.push('/');
         })
         .catch((error) => {
-          this.$toast.error(error.response?.data.message || 'Unsuccessful attempt', {
+          this.$toast.error(error.response.data?.error[0] || error.response.data?.message || 'Unsuccessful attempt', {
             position: 'top-right',
             duration: 3000,
           });
