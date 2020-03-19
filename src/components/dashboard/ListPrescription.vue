@@ -19,7 +19,7 @@
                 </g>
               </g></g> </svg>
             </span>
-            {{ format.formatDistance(new Date(prescription.updatedAt), new Date(), {
+            {{ format.formatDistance(new Date(prescription.createdAt), new Date(), {
               addSuffix: true
             }) }}</p>
           </div>
@@ -153,7 +153,11 @@ export default {
   }),
   methods: {
     sortDailyInterval(dailyIntervals) {
-      return dailyIntervals.filter((intervalTime) => dateFns.isAfter(new Date(this.parseToToday(intervalTime.stringValue)), new Date()))
+      return dailyIntervals.filter((intervalTime) => {
+        const newDate = new Date(this.parseToToday(intervalTime.stringValue));
+        newDate.setHours(newDate.getHours() + 1);
+        return dateFns.isAfter(newDate, new Date());
+      })
         .map((di) => ({
           ...di,
           formattedValue: new Date(this.parseToToday(di.stringValue)),

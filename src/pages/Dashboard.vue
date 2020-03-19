@@ -11,7 +11,7 @@
           <p class="text-gray-700 font-mono text-xs mb-2">Please consider adding a proper title for the prescription.</p>
           <form v-show="viewPrescription">
             <div class="mb-4">
-              <input @change.prevent="(evt) => onFieldChange(evt, 'title')" class="appearance-none border border-orange-600 h-8 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline text-sm h-10 text-orange-600" id="title" type="text" placeholder="Prescription Title" name="title" />
+              <input @change.prevent="(evt) => onFieldChange(evt, 'title')" class="appearance-none border border-orange-600 h-8 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline text-sm h-10 text-orange-600 font-sans" id="title" type="text" placeholder="Prescription Title" v-model="prescription.title" name="title" />
             </div>
             <div class="mb-4">
               <span class="text-sm">Prescription Type</span>
@@ -30,11 +30,11 @@
                   <div v-show="prescription.type !== ''" class="w-full">
                     <label class="inline-flex flex-col font-mono text-sm font-semibold mt-2 w-full">
                       <span class="mr-4 relative text-xs mb-1">Name Of Drug/Prescription</span>
-                      <input type="text" name="drugName" class="border border-orange-600 py-1 px-2 h-10 rounded text-orange-600" v-model="prescription.drugName" />
+                      <input type="text" name="drugName" class="border border-orange-600 py-1 px-2 h-10 rounded text-orange-600 font-sans" v-model="prescription.drugName" />
                     </label>
                     <label class="inline-flex flex-col font-mono text-sm font-semibold mb-2 w-full">
                       <span class="mr-4 relative text-xs mb-1">Quantity</span>
-                      <input type="number" name="quantity" class="border border-orange-600 py-1 px-2 h-10 rounded text-orange-600" v-model="prescription.quantity" />
+                      <input type="number" name="quantity" class="border border-orange-600 py-1 px-2 h-10 rounded text-orange-600 font-sans" v-model="prescription.quantity" />
                     </label>
                     <div class="w-full flex flex-col">
                       <div class="w-full pr-1 inline-flex flex-col">
@@ -44,7 +44,7 @@
                           v-model="dosageDuration"
                           :min-date="new Date()"
                           :input-props='{
-                            class: "appearance-none border border-orange-600 h-10 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline font-mono font-bold text-md w-auto",
+                            class: "appearance-none border border-orange-600 h-10 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline font-sans font-bold text-md w-auto",
                             placeholder: "Days",
                             readonly: true
                           }'
@@ -55,12 +55,12 @@
                           <span class="text-xs font-mono mb-1 flex justify-between">
                             <span class="w-3/4">Daily Dosage Interval</span>
                             <div class="w-1/3 justify-between flex text-orange-600 text-xs">
-                              <span class="cursor-pointer" :class="[dailyInterval.length >= 4 ? 'text-gray-600' : 'text-orange-600']" @click.prevent="() => manageDailyInterval('add')">Add</span>
-                              <span class="cursor-pointer ml-1" :class="[dailyInterval.length <= 1 ? 'text-gray-600' : 'text-orange-600']" @click.prevent="() => manageDailyInterval('remove')">Remove</span>
+                              <span class="cursor-pointer font-sans" :class="[dailyInterval.length >= 4 ? 'text-gray-600' : 'text-orange-600']" @click.prevent="() => manageDailyInterval('add')">Add</span>
+                              <span class="cursor-pointer font-sans ml-1" :class="[dailyInterval.length <= 1 ? 'text-gray-600' : 'text-orange-600']" @click.prevent="() => manageDailyInterval('remove')">Remove</span>
                             </div>
                           </span>
                           <div
-                            class="w-full"
+                            class="w-full font-sans"
                             :class="[dailyInterval.length > 1 ? 'mb-2' : '']"
                             v-for="(interval, index) in dailyInterval"
                             :key="index += 1"
@@ -83,7 +83,7 @@
                       <div class="flex w-full">
                         <div class="w-full inline-flex flex-col">
                           <span class="text-xs font-mono mb-1">Additional Information</span>
-                          <textarea class="appearance-none border border-orange-600 h-10 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline font-mono font-bold text-xs w-auto resize-none" v-model="prescription.additionalInformation"></textarea>
+                          <textarea class="appearance-none border border-orange-600 h-10 rounded w-full py-2 px-3 text-orange-600 leading-tight focus:outline-none focus:shadow-outline font-sans font-bold text-xs w-auto resize-none" v-model="prescription.additionalInformation"></textarea>
                         </div>
                       </div>
                     </div>
@@ -158,6 +158,20 @@ export default {
             position: 'top-right',
             duration: 3000,
           });
+          this.prescription = {
+            title: '',
+            drugName: '',
+            type: '',
+            quantity: 1,
+            additionalInformation: '',
+          };
+          this.dosageDuration = {
+            start: new Date(),
+            end: null,
+          };
+          this.dailyInterval = [{
+            intervalTime: null,
+          }];
         })
         .catch((error) => {
           this.$toast.error(error.response?.data?.message || error.response?.data?.error[0] || 'Unsuccessful attempt', {
