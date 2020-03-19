@@ -3,9 +3,7 @@ import STORE from '../store';
 
 const Authenticate = (_to, from, next) => {
   if (_to.meta?.protected === true) {
-    // const authorization = STORE.getters.isLoggedIn;
     if (!(STORE.getters.authStatus === 'success') && typeof STORE.getters.token !== 'string') {
-      console.log('here');
       return next('/login');
     }
   }
@@ -34,16 +32,16 @@ export default new VueRouter({
       },
       beforeEnter: Authenticate,
     },
-    {
-      path: '/settings',
-      to: '/settings',
-      name: 'settings',
-      component: () => import('../pages/Settings.vue'),
-      meta: {
-        protected: true,
-      },
-      beforeEnter: Authenticate,
-    },
+    // {
+    //   path: '/settings',
+    //   to: '/settings',
+    //   name: 'settings',
+    //   component: () => import('../pages/Settings.vue'),
+    //   meta: {
+    //     protected: true,
+    //   },
+    //   beforeEnter: Authenticate,
+    // },
     {
       path: '/login',
       to: '/login',

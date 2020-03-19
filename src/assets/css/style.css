@@ -1,2 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans|Rajdhani&display=swap');
 @import url('../../../node_modules/vue-toast-notification/dist/theme-default.css');
+
+.divider {
+  opacity: 0.4;
+  height: 0.05rem;
+}
+
+#delete-action {
+  position: relative;
+  width: inherit;
+  margin-top: -20px;
+  display: flex;
+  justify-content: flex-end;
+}

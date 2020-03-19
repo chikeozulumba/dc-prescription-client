@@ -13,13 +13,19 @@ export default new Vuex.Store({
       user: null,
       status: 'default',
     },
+    prescriptions: {
+      status: '',
+      data: [],
+      history: {
+        data: [],
+      },
+    },
   },
   mutations: {
     AUTH_REQUEST(state) {
       state.auth.status = 'loading';
     },
     AUTH_SUCCESS(state, { token, user }) {
-      console.log(token);
       state.auth.status = 'success';
       state.auth.token = token;
       state.auth.user = user;
@@ -28,9 +34,32 @@ export default new Vuex.Store({
       state.auth.status = 'error';
       state.auth.error = error;
     },
+    DATA_REQUEST(state, field) {
+      state[field].status = 'loading';
+    },
+    GET_PRESCRIPTIONS(state, data) {
+      if (Array.isArray(data)) {
+        state.prescriptions.data = data;
+      }
+    },
+    GET_PRESCRIPTIONS_HISTORY(state, data) {
+      if (Array.isArray(data)) {
+        state.prescriptions.history.data = data;
+      }
+    },
+    NEW_PRESCRIPTION(state, data) {
+      state.prescriptions.data.unshift(data);
+    },
+    DELETE_PRESCRIPTION(state, id) {
+      for (let i = state.prescriptions.data.length - 1; i >= 0; --i) {
+        if (state.prescriptions.data[i]._id === id) {
+          state.prescriptions.data.splice(i, 1);
+        }
+      }
+    },
     LOGOUT(state) {
       state.auth.status = '';
-      state.auth.token = '';
+      state.auth.token = null;
     },
   },
   actions: {
@@ -43,7 +72,6 @@ export default new Vuex.Store({
           .then((resp) => {
             const { accessToken } = resp.data;
             const { user } = resp.data;
-            console.log(user);
             localStorage.setItem('authorization_token', accessToken);
             axios.defaults.headers.common.Authorization = accessToken;
             commit('AUTH_SUCCESS', { token: accessToken, user });
@@ -87,10 +115,71 @@ export default new Vuex.Store({
         resolve();
       });
     },
+    getPrescriptions({
+      commit,
+    }) {
+      return new Promise((resolve, reject) => {
+        commit('DATA_REQUEST', 'prescriptions');
+        HTTP.get(constants.GET_PRESCRIPTION_URL)
+          .then((resp) => {
+            commit('GET_PRESCRIPTIONS', resp.data);
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    addPrescription({
+      commit,
+    }, data) {
+      return new Promise((resolve, reject) => {
+        commit('DATA_REQUEST', 'prescriptions');
+        HTTP.post(constants.ADD_PRESCRIPTION_URL, data)
+          .then((resp) => {
+            commit('NEW_PRESCRIPTION', resp.data);
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    deletePrescription({
+      commit,
+    }, data) {
+      return new Promise((resolve, reject) => {
+        HTTP.delete(constants.DELETE_PRESCRIPTION_URL + data._id)
+          .then((resp) => {
+            commit('DELETE_PRESCRIPTION', data._id);
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    getPrescriptionsHistory({
+      commit,
+    }) {
+      return new Promise((resolve, reject) => {
+        commit('DATA_REQUEST', 'prescriptions');
+        HTTP.get(constants.GET_PRESCRIPTION_HISTORY_URL)
+          .then((resp) => {
+            commit('GET_PRESCRIPTIONS_HISTORY', resp.data);
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
   },
   getters: {
     isLoggedIn: (state) => !!state.auth.token,
     authStatus: (state) => state.auth.status,
     token: (state) => state.auth.token,
+    prescriptions: (state) => state.prescriptions.data,
+    prescriptionsHistory: (state) => state.prescriptions.history.data,
   },
 });

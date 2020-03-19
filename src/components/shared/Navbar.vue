@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="flex items-center justify-between flex-wrap bg-white fixed w-full shadow p-6">
+    <nav style="z-index: 9;" class="flex items-center justify-between flex-wrap bg-white fixed w-full shadow p-6">
       <div class="flex items-center flex-shrink-0 text-white mr-6">
         <img class="w-10 mr-2 " src="../../assets/logo.png" alt="">
         <!-- <span class="font-semibold text-xl tracking-tight">Tailwind CSS</span> -->
@@ -21,20 +21,25 @@
         :class="[showNavMenu ? 'block' : 'hidden']"
       >
         <div v-if="$store.getters.authStatus === 'success' || typeof $store.getters.token === 'string'" class="text-sm md:flex-grow">
-          <a
-            href="#responsive-header"
+          <router-link
+            to="/"
             class="font-mono block mt-4 md:inline-block mt-2 md:mt-0 text-orange-600 hover:text-orange-800 mr-4"
-          >History</a>
-          <a
-            href="#responsive-header"
+          >Dashboard</router-link>
+          <router-link
+            to="/history"
             class="font-mono block mt-4 md:inline-block mt-2 md:mt-0 text-orange-600 hover:text-orange-800 mr-4"
-          >Settings</a>
+          >History</router-link>
+          <!-- <router-link
+            to="/settings"
+            class="font-mono block mt-4 md:inline-block mt-2 md:mt-0 text-orange-600 hover:text-orange-800 mr-4"
+          >Settings</router-link> -->
         </div>
         <div v-else class="text-sm md:flex-grow">
 
         </div>
         <div v-if="$store.getters.authStatus === 'success' || typeof $store.getters.token === 'string'">
           <a
+            @click.prevent="logout"
             href="#"
             class="inline-block text-sm px-4 py-2 leading-none border rounded text-orange-600 border-orange-600 hover:border-transparent hover:text-white hover:bg-orange-800 mt-2 md:mt-0"
           >Logout</a>
@@ -58,6 +63,10 @@ export default {
     };
   },
   methods: {
+    logout() {
+      this.$store.dispatch('logout')
+        .then(() => this.$router.push('/login'));
+    },
     toggleNavMenu() {
       this.showNavMenu = !this.showNavMenu;
     },

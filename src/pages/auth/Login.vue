@@ -5,7 +5,7 @@
         <img class="w-10 mr-2 " src="../../assets/logo.png" alt="">
         <!-- <span class="font-semibold text-xl tracking-tight">Tailwind CSS</span> -->
       </div>
-      <form @submit.prevent="loginUser" class="bg-white shadow rounded px-8 pt-6 pb-8 mb-4">
+      <form @submit.prevent="loginUser" class="bg-white border border-gray-400 rounded px-8 pt-6 pb-8 mb-4">
         <h3 class="block text-orange-600 font-sans text-lg md:text-2xl font-bold mb-6" for="password">Login</h3>
         <div class="mb-4">
           <label class="block text-orange-600 font-sans text-sm font-bold mb-2" for="email">Email Address</label>
@@ -26,7 +26,7 @@
             type="password"
             placeholder="******************"
           />
-          <p class="text-red-500 text-xs font-mono italic">Please choose a password.</p>
+          <!-- <p class="text-red-500 text-xs font-mono italic">Please choose a password.</p> -->
         </div>
         <div class="flex items-center justify-between">
           <button
